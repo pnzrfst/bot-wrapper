@@ -1,39 +1,41 @@
 import { useEffect, useState } from "react"
 import CreateBot from "../components/CreateBot";
+import api from "../services/api";
+import { Bot } from "../types/Bot";
+import { useNavigate } from "react-router-dom";
 
-interface Bots {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-    isActive: boolean;
-    profile_pic: string;
-    created_at: string;
-}
-
-export default function Dashboard (){
-    const [bots, setBots] = useState<Bots[] | null>(null);
-
+export default function Dashboard() {
+    const [bots, setBots] = useState<Bot[] | null>(null);
+    const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     useEffect(() => {
         handleGetBots()
     }, [])
 
+    function handleBotCreated(newBot: Bot) {
+        if (bots === null) {
+            setBots([newBot])
+        } else {
+            setBots([newBot, ...bots])
+        };
+    }
+
     async function handleGetBots() {
         try {
-            console.log("oii")
-        } catch (error) {
-            
+            const result = await api.get("/bots");
+            setBots(result.data);
+        } catch (error: any) {
+            console.log(error.message)
         }
     }
 
-    return(
+    return (
         <div className="bg-light">
             <header className="w-100 h-75 p-4 border d-flex shadow-sm">
                 <div className="d-flex  justify-content-between container h-100 bg-transparent">
                     <button className="btn btn-light-outline border h-100 align-self-center"
-                     onClick={() => setIsModalOpen(true)}>
+                        onClick={() => setIsModalOpen(true)}>
                         <i className="bi bi-plus text-dark align-self-center fw-bold"></i>
                     </button>
 
@@ -52,7 +54,7 @@ export default function Dashboard (){
                                 </button>
                             </div>
                             <div className="d-flex justify-content-evenly container h-100 w-25 align-items-center p-2 border">
-                               <p className=" my-1 mx-1 align-self-center">Ações</p>
+                                <p className=" my-1 mx-1 align-self-center">Ações</p>
                                 <button className="btn btn-light-outline">
                                     <i className="bi bi-arrow-right"></i>
                                 </button>
@@ -63,23 +65,29 @@ export default function Dashboard (){
             </header>
 
             <main>
-                <ul>
+                <ul className="list-none">
                     {bots?.map((bot) => (
                         <li key={bot.id}>
                             <div className="border h-50 w-50">
-                                <p>{bot.profile_pic}</p>
                                 <p>{bot.name}</p>
-                                <p>{bot.email}</p>
+                                <p>{bot.access_token}</p>
+                                <p>{bot.access_token_secret}</p>
+                                <p>{bot.api_key}</p>
+                                <p>{bot.api_key_secret}</p>
                                 <p>{bot.created_at}</p>
-                                <p>{bot.isActive}</p>
                             </div>
+
+
+                            <button onClick={() => navigate(`/bots/${bot.id}`)} className="btn btn-light border">Ver</button>
                         </li>
                     ))}
                 </ul>
             </main>
 
 
-            <CreateBot isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={() => console.log("oi2")}/>
+            <CreateBot onCreateBot={handleBotCreated} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={() => setIsModalOpen(false)} />
+            {isModalOpen && <div className="offcanvas-backdrop fade show backdrop-custom" onClick={() => setIsModalOpen(false)}></div>}
+
         </div>
     )
 }
