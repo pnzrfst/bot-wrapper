@@ -6,7 +6,7 @@ interface CreateBotProps {
     isOpen: boolean;
     onClose: () => void
     onSubmit: () => void
-    onCreateBot: ( newBot: Bot) => void;
+    onCreateBot?: ( newBot: Bot) => void;
 }
 
 
@@ -44,8 +44,10 @@ export default function CreateBot({ isOpen, onClose, onSubmit, onCreateBot}: Cre
 
         try {
             const result = await api.post("/bots", newBot);
-            onCreateBot(result.data as Bot);
-            console.log(result)
+
+            if(onCreateBot) onCreateBot(result.data as Bot);
+
+            console.log(result);
         } catch (error: any) {
             console.log(error.message)
         }

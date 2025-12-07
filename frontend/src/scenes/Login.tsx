@@ -2,7 +2,7 @@ import { useState } from "react"
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import api from '../services/api'
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface User {
     email_address: string;
@@ -17,24 +17,27 @@ export default function Login() {
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
-       const user : User = {
-         email_address,
-         password
-       }
+        const user: User = {
+            email_address,
+            password
+        }
 
-       try {
-        console.log("entrou")
-        const loggedUser = await api.post("/users", user);
-        navigate("/dashboard")
-       } catch (error: any) {
-        console.log(error.message)
-       }
+        try {
+            console.log("entrou")
+            const loggedUser = await api.post("/login", user);
+            if (loggedUser) {
+                navigate("/dashboard")
+
+            }
+        } catch (error: any) {
+            console.log(error.message)
+        }
     }
 
     return (
         <div className="form-group d-flex w-25 h-75 flex-column m-5 p-5 align-items-start justify-content-evenly border shadow-sm">
             <h1 className="align-self-start p-1 fw-bolder">Entrar</h1>
-            <p className="p-1 text text-muted fw-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+            <p className="p-1 text text-muted fw-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                 Morbi sed arcu consequat ex congue mattis eu vel nibh. Sed blandit arcu ut tortor volutpat, ultrices ultricies risus tempus.</p>
             <form className="d-flex flex-column justify-content-around w-100 h-100" onSubmit={handleSubmit}>
                 <div className="d-flex flex-column justify-content-evenly gap-1">
