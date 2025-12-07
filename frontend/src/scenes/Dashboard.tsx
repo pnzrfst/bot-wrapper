@@ -14,12 +14,9 @@ export default function Dashboard() {
         handleGetBots()
     }, [])
 
-    function handleBotCreated(newBot: Bot) {
-        if (bots === null) {
-            setBots([newBot])
-        } else {
-            setBots([newBot, ...bots])
-        };
+    async function handleBotCreated() {
+        setIsModalOpen(false);
+        await handleGetBots();
     }
 
     async function handleGetBots() {
@@ -32,26 +29,58 @@ export default function Dashboard() {
     }
 
     return (
-        <div className="bg-light">
-            <Header onClick={() => setIsModalOpen(true)}/>
-            <main>
-                <ul className="list-none">
-                    {bots?.map((bot) => (
-                        <li key={bot.id}>
-                            <div className="border h-50 w-50">
-                                <p>{bot.name}</p>
-                                <p>{bot.access_token}</p>
-                                <p>{bot.access_token_secret}</p>
-                                <p>{bot.api_key}</p>
-                                <p>{bot.api_key_secret}</p>
-                                <p>{bot.created_at}</p>
+        <div className="min-vh-100 bg-light">
+            <Header onClick={() => setIsModalOpen(true)} />
+            
+            <main className="container pt-4 pb-5">
+                
+                <h2 className="fw-bold mb-4 text-dark">Seus bots cadastrados</h2>
+                
+                {bots?.length !== undefined && bots.length > 0 ? (
+                    
+                    <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                        {bots.map((bot) => (
+                            <div className="col" key={bot.id}>
+                                <div 
+                                    className="card h-100 shadow-sm border-0 border-start border-primary-light border-4"
+                                    role="button"
+                                    onClick={() => navigate(`/bots/${bot.id}`)}
+                                >
+                                    <div className="card-body d-flex flex-column">
+                                        
+                                        <h5 className="card-title fw-semibold text-dark mb-2">{bot.name || `Bot ID: ${bot.id}`}</h5>
+                                        
+                                        <p className="card-text text-muted small mb-3">
+                                            Criado em: {' '}
+                                            {bot.created_at 
+                                                ? new Date(bot.created_at).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) 
+                                                : "Data indisponível."
+                                            }
+                                        </p>
+                                        
+                                        <div className="mt-auto pt-3 border-top">
+                                            <p className="mb-1 text-truncate small text-muted">
+                                                <span className="fw-bold">API Key:</span> {bot.api_key || 'N/A'}
+                                            </p>
+                                            <p className="mb-0 text-truncate small text-muted">
+                                                <span className="fw-bold">Access Token:</span> {bot.access_token || 'N/A'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                </div>
                             </div>
+                        ))}
+                    </div>
 
-
-                            <button onClick={() => navigate(`/bots/${bot.id}`)} className="btn btn-light border">Ver</button>
-                        </li>
-                    ))}
-                </ul>
+                ) : (
+                    // Mensagem de Bots Não Encontrados
+                    <div className="alert alert-info border-0 p-4 text-center" role="alert">
+                        <p className="mb-2 fw-bold">Nenhum bot cadastrado!</p>
+                        <p className="mb-0 text-muted">Use o botão "Criar Bot" na barra superior para começar.</p>
+                    </div>
+                )}
             </main>
 
 

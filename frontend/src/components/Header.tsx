@@ -11,6 +11,10 @@ export default function Header({ onClick }: HeaderProps) {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const navigate = useNavigate()
 
+    function handleLogOut() {
+        localStorage.clear()
+        navigate("/");
+    }
     return (
         <header className="w-100 h-75 p-4 border d-flex shadow-sm">
             <div className="d-flex w-100 justify-content-between container p-1 h-100 bg-transparent">
@@ -51,7 +55,7 @@ export default function Header({ onClick }: HeaderProps) {
                         </div>
                     </div>
                 </div>
-                <button className="btn btn-light-outline align-self-center border h-75" title="Sair">
+                <button className="btn btn-light-outline align-self-center border h-75" title="Sair" onClick={() => handleLogOut()}>
                     <i className="bi bi-door-closed text-dark align-self-center fw-bold"></i>
                 </button>
             </div>

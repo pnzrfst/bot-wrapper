@@ -5,29 +5,30 @@ import api from '../services/api'
 import { useNavigate } from "react-router-dom";
 
 interface User {
-    email_address: string;
+    email: string;
     password: string;
 }
 
 
 export default function Login() {
-    const [email_address, setEmail] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const navigate = useNavigate()
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
         const user: User = {
-            email_address,
+            email,
             password
         }
 
         try {
             console.log("entrou")
             const loggedUser = await api.post("/login", user);
+            console.log(loggedUser)
             if (loggedUser) {
-                navigate("/dashboard")
-
+                localStorage.setItem("authToken", loggedUser.data.token);
+                navigate("/dashboard");
             }
         } catch (error: any) {
             console.log(error.message)
@@ -42,7 +43,7 @@ export default function Login() {
             <form className="d-flex flex-column justify-content-around w-100 h-100" onSubmit={handleSubmit}>
                 <div className="d-flex flex-column justify-content-evenly gap-1">
                     <label className="mb-2 mt-2 fw-light">Email</label>
-                    <input className="form-control" aria-describedby="emailHelp" type="email" value={email_address} onChange={(e) => setEmail(e.target.value)}></input>
+                    <input className="form-control" aria-describedby="emailHelp" type="email" value={email} onChange={(e) => setEmail(e.target.value)}></input>
                     <label className="mb-2 mt-2 fw-light">Senha</label>
                     <input className="form-control" aria-describedby="passwordHelp" type="password" value={password} onChange={(e) => setPassword(e.target.value)}></input>
                 </div>

@@ -11,7 +11,5 @@ export interface BotInput {
 interface Bot extends BotInput{
     id: string;
     created_at: string;
-    user: {
-        email_address
-    }
+    user_name: string
 }
