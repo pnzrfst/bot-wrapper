@@ -1,5 +1,5 @@
 class BotsController < ApplicationController
-  before_action :authenticate
+  before_action :authenticate 
 
   def create
     #Achar o meu usuario logado
