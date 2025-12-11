@@ -10,10 +10,16 @@ export default function SingleBot() {
     const [readOnly, setReadOnly] = useState<boolean>(true);
     const inputRef = useRef<HTMLInputElement>(null);
     const [name, setNewName] = useState<string>("")
+    const [isVisible, setIsVisible] = useState<boolean>(false)
 
     let { id } = useParams();
     const [singleBot, setSingleBot] = useState<Bot | null>(null);
 
+    const renderSensibleContent = (text: string | undefined) => {
+        if (!text) return "N/A"
+
+        return isVisible ? text : "••••••••••••••••••••••••••••••"
+    }
 
     function enableChangeName() {
         setReadOnly(false);
@@ -81,8 +87,17 @@ export default function SingleBot() {
                 </div>
 
                 <div className="card shadow-sm border-0">
-                    <div className="card-header bg-white border-bottom fw-semibold text-dark">
-                        🔑  Informações de Acesso
+                    <div className="card-header bg-white  border-bottom fw-semibold text-dark">
+                        <div className=" fs-3 p-2 d-flex align-items-center justify-content-between">
+                            🔑  Informações de Acesso
+                            <i
+                                className={`bi ${isVisible ? 'bi-eye-slash' : 'bi-eye'}`}
+                                onClick={() => setIsVisible(!isVisible)}
+                                style={{ cursor: 'pointer' }}
+                                title={isVisible ? "Ocultar informações" : "Mostrar informações"}
+                            ></i>
+
+                        </div>
                     </div>
                     <div className="card-body p-4">
                         <div className="row g-4">
@@ -90,27 +105,27 @@ export default function SingleBot() {
                             {/* Bloco de Informação Reutilizável */}
                             <div className="col-lg-6 col-md-12">
                                 <h6 className="text-muted mb-1 small fw-bold text-uppercase">Access Token</h6>
-                                <p className="text-break fw-light">{singleBot?.access_token || 'N/A'}</p>
+                                <p className="text-break fw-light">{renderSensibleContent(singleBot?.access_token || 'N/A')}</p>
                             </div>
 
                             <div className="col-lg-6 col-md-12">
                                 <h6 className="text-muted mb-1 small fw-bold text-uppercase">Access Token Secret</h6>
-                                <p className="text-break fw-light">{singleBot?.access_token_secret || 'N/A'}</p>
+                                <p className="text-break fw-light">{renderSensibleContent(singleBot?.access_token_secret || 'N/A')}</p>
                             </div>
 
                             <div className="col-lg-6 col-md-12">
                                 <h6 className="text-muted mb-1 small fw-bold text-uppercase">API Key</h6>
-                                <p className="text-break fw-light">{singleBot?.api_key || 'N/A'}</p>
+                                <p className="text-break fw-light">{renderSensibleContent(singleBot?.api_key || 'N/A')}</p>
                             </div>
 
                             <div className="col-lg-6 col-md-12">
                                 <h6 className="text-muted mb-1 small fw-bold text-uppercase">API Key Secret</h6>
-                                <p className="text-break fw-light">{singleBot?.api_key_secret || 'N/A'}</p>
+                                <p className="text-break fw-light">{renderSensibleContent(singleBot?.api_key_secret || 'N/A')}</p>
                             </div>
 
                             <div className="col-12">
                                 <h6 className="text-muted mb-1 small fw-bold text-uppercase">Bearer Token</h6>
-                                <p className="text-break fw-normal">{singleBot?.bearer_token || 'N/A'}</p>
+                                <p className="text-break fw-normal">{renderSensibleContent(singleBot?.bearer_token || 'N/A')}</p>
                             </div>
                         </div>
                     </div>

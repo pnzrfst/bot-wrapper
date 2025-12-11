@@ -5,6 +5,8 @@ class BotsController < ApplicationController
     #Achar o meu usuario logado
     #Deixar ele criar o bot
     @bot = @current_user.bots.create(bots_params)
+    BotDeployJob.perform_later(@bot.id)
+    render json: @bot, status :created
   end
 
   def index 
