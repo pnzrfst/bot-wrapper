@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_08_231959) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_11_225809) do
   create_table "bot_logs", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -32,7 +32,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_08_231959) do
 
   create_table "rules", force: :cascade do |t|
     t.string "bot_id"
-    t.string "conten"
+    t.string "content"
     t.datetime "created_at", null: false
     t.integer "frequency"
     t.datetime "updated_at", null: false

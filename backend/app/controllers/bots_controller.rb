@@ -5,8 +5,27 @@ class BotsController < ApplicationController
     #Achar o meu usuario logado
     #Deixar ele criar o bot
     @bot = @current_user.bots.create(bots_params)
-    BotDeployJob.perform_later(@bot.id)
-    render json: @bot, status :created
+    render json: @bot, status: :created
+  end
+
+  def activate
+    @bot = @current_user.bots.find(params[:id])
+    spawned_bot = SpawnBot.new(@bot)
+
+    if spawned_bot.call
+      rule_to_post = @bot.rules.first
+
+      if rule_to_post.present?
+        new_job = TwitterPostService.call(@bot, rule_to_post)
+        puts "era pra ir!"
+
+        render json: {message: "Bot ativado e postagem agendada/enviada "}, status: :ok
+      else
+        render json: {message: "Bot ativado ou agendado, mas sem rules."}, status: :ok
+      end
+    else
+      render json: {errors: "Falha ao iniciar o docker do bot."}, status: :unprocessable_entity
+    end
   end
 
   def index 

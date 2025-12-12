@@ -30,6 +30,15 @@ export default function SingleBot() {
         }, 0)
     }
 
+    async function activateJob() {
+        try {
+            await api.post(`/bots/${id}/activate`);
+            console.log("subindo jobs")
+        } catch (error: any) {
+            console.log(error.message)
+        }
+    }
+
     async function updateBotName() {
         try {
             (await api.put(`/bots/${id}`, { name }))
@@ -135,7 +144,7 @@ export default function SingleBot() {
                     <h2 className="fw-bold ms-3 mb-3 text-dark">Outras configurações</h2>
                     <div className="w-50 h-50 p-2 d-flex justify-content-start gap-3">
                         <button className="btn border btn-light">Visualizar informações</button>
-                        <button className="btn border btn-light">Criar job</button>
+                        <button className="btn border btn-light" onClick={() => activateJob()}>Criar job</button>
                         <button className="btn border btn-light">Editar jobs</button>
                         <button className="btn border btn-light">Apagar jobs</button>
                     </div>

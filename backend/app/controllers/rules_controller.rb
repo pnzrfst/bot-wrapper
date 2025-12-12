@@ -1,4 +1,4 @@
-class RulesController < Application RulesController
+class RulesController < ApplicationController
   def create
     #captura o bot atual baseado no user logado
     bot = @current_user.bots.find(params[:bot_id])
@@ -16,6 +16,6 @@ class RulesController < Application RulesController
   private
   
   def rule_params
-    params.require(rule).permit(:content, :frequency)
+    params.require(:rule).permit(:content, :frequency)
   end
 end
